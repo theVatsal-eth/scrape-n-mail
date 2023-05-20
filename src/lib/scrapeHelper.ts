@@ -1,6 +1,6 @@
+import { kv } from '@vercel/kv';
 import axios from 'axios';
 import { load } from 'cheerio';
-import cron from './cron.json' assert { type: 'json' };
 
 export interface ScrapeData {
   date: string;
@@ -11,6 +11,10 @@ export interface ScrapeData {
 async function scrapeHTML() {
   const { data } = await axios.get('https://www.gnscr.ac.in/news.aspx');
   const $ = load(data);
+
+  const cron = {
+    lastCronHref: await kv.get<string>('lastCronHref'),
+  };
 
   console.log({ $ });
 
@@ -39,6 +43,11 @@ async function scrapeHTML() {
       };
 
       console.log({ result });
+
+      if (!cron.lastCronHref) {
+        results.push(result);
+        break;
+      }
 
       if (!cron.lastCronHref.length) {
         results.push(result);

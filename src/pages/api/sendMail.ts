@@ -1,17 +1,20 @@
-import scrapeHTML from '@/lib/scrapeHelper';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { writeFile } from 'fs';
-import cron from '../../lib/cron.json' assert { type: 'json' };
-import sendMail from '@/lib/mailer';
-import { getEmailTemplate } from '@/lib/email-template';
+
 import { env } from '../../env.mjs';
 
+import scrapeHTML from '@/lib/scrapeHelper';
+import sendMail from '@/lib/mailer';
+import { getEmailTemplate } from '@/lib/email-template';
+import { kv } from '@vercel/kv';
+
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse
 ) {
   const scrapes = await scrapeHTML();
-  const lastCronData = cron;
+  const lastCronData = {
+    lastCronHref: await kv.get<string>('lastCronHref'),
+  };
 
   if (
     !scrapes.length ||
@@ -25,31 +28,20 @@ export default async function handler(
   sendMail(
     {
       from: env.EMAIL, // sender address
-      bcc: ['0505m2003@gmail.com', 'testingmydevshit@gmail.com'], // receiver email
+      bcc: await kv.smembers<string[]>('emails'), // receiver email
       subject: 'GNSCR News Update', // Subject line
       html: getEmailTemplate(scrapes),
       replyTo: env.REPLY_TO,
     },
-    (err, info) => {
+    async (err, info) => {
       if (err) {
         console.error({ err });
         return res.status(500).json({ message: 'Error sending mail' });
       }
       console.log({ info });
+      await kv.set('lastCronHref', scrapes[0].href);
+      res.status(200).json({ scrapes });
     }
   );
-
-  const newCronData = {
-    lastCronHref: scrapes[0].href,
-    lastCronDate: Date.now().toString(),
-  };
-
-  const json = JSON.stringify(newCronData);
-
-  writeFile('src/lib/cron.json', json, 'utf-8', (err) => {
-    if (err) throw err;
-    console.log('Data written to file');
-  });
-
   res.status(200).json({ scrapes });
 }
