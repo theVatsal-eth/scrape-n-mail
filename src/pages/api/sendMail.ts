@@ -8,9 +8,10 @@ import { getEmailTemplate } from '@/lib/email-template';
 import { kv } from '@vercel/kv';
 
 export default async function handler(
-  _req: NextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log(req.headers);
   const scrapes = await scrapeHTML();
   const lastCronData = {
     lastCronHref: await kv.get<string>('lastCronHref'),

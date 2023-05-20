@@ -16,8 +16,6 @@ async function scrapeHTML() {
     lastCronHref: await kv.get<string>('lastCronHref'),
   };
 
-  console.log({ $ });
-
   const results: ScrapeData[] = [];
 
   let j = 2;
@@ -41,8 +39,6 @@ async function scrapeHTML() {
         news: news.text().trim(),
         href: 'https://gnscr.ac.in/' + $(a).find('a').attr('href'),
       };
-
-      console.log({ result });
 
       if (!cron.lastCronHref) {
         results.push(result);
