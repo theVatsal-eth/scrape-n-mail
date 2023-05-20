@@ -1,4 +1,4 @@
-import { ScrapeData } from './scrapeHelper';
+import type { ScrapeData } from './scrapeHelper';
 
 export const getEmailTemplate = (data: ScrapeData[]) => {
   const lastDate: string = data[0].date;

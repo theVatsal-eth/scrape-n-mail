@@ -11,7 +11,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.headers);
   const scrapes = await scrapeHTML();
   const lastCronData = {
     lastCronHref: await kv.get<string>('lastCronHref'),
@@ -21,7 +20,6 @@ export default async function handler(
     !scrapes.length ||
     scrapes[scrapes.length - 1].href === lastCronData.lastCronHref
   ) {
-    console.log({ scrapes, lastCronData });
     console.log('No new data found hence no need to send mail');
     return res.status(200).json({ scrapes, message: 'No new data found' });
   }
@@ -34,12 +32,11 @@ export default async function handler(
       html: getEmailTemplate(scrapes),
       replyTo: env.REPLY_TO,
     },
-    async (err, info) => {
+    async (err) => {
       if (err) {
         console.error({ err });
         return res.status(500).json({ message: 'Error sending mail' });
       }
-      console.log({ info });
       await kv.set('lastCronHref', scrapes[0].href);
       res.status(200).json({ scrapes });
     }

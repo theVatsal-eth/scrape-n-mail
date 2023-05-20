@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
+import type Mail from 'nodemailer/lib/mailer';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,

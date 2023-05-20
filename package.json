@@ -16,8 +16,6 @@
     "@vercel/kv": "^0.2.1",
     "axios": "^1.4.0",
     "cheerio": "1.0.0-rc.12",
-    "eslint": "8.41.0",
-    "eslint-config-next": "13.4.3",
     "next": "13.4.3",
     "nodemailer": "^6.9.2",
     "react": "18.2.0",
@@ -26,6 +24,12 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.8"
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
+    "@types/nodemailer": "^6.4.8",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.3",
+    "prettier": "^2.8.8"
   }
 }
