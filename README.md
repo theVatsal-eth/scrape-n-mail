@@ -10,9 +10,9 @@
   </p>
 
 ## About The Project
-
-![Screen Shot](/public/mail.png)
-
+<p align="center">
+<img align="center" src="https://github.com/theVatsal-eth/scrape-n-mail/assets/95976661/826747d1-0950-4a8e-a808-bdae00a40f1d" alt="demo" />
+</p>
 I study in GNSCR and I am tired of missing notices as they don't arrive in my email, so I wrote a scraper program, that will periodically scrape the notice board of my college and send me newly added notice directly in my email. 
 
 ## Built With
